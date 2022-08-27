@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import CardMain from "../../Component/CardMain/CardMain";
 import SaveScreen from "../../Utils/SafeArea";
@@ -9,11 +9,11 @@ import useCurrentLocation from "../../Utils/Fetching/CurrentLocation";
 import useDailyWeather from "../../Utils/Fetching/Daily";
 
 const HomeScreen = () => {
-  const { coords } = useSelector((state) => state.position);
   const { data } = useCurrentLocation();
   const { dailyData } = useDailyWeather();
   const { loading } = data;
-  console.log('daily',dailyData)
+  const loadDaily = dailyData?.loading
+  const dataDaily = dailyData?.data?.list
   return (
     <SaveScreen style={styles.container}>
       {loading ? (
@@ -21,7 +21,18 @@ const HomeScreen = () => {
       ) : (
         <>
           <CardMain data={data?.data} />
-          <ListComponent />
+
+          {/* === List ==== */}
+          <ScrollView style={{ width: "111%" }}>
+            { dailyData?.loading ? <Text>Loading...</Text> : 
+              dailyData?.data?.list?.map((data,i) => (
+              <View key={i}>
+                <ListComponent  />
+              </View>
+            ))}
+          </ScrollView>
+
+          {/* === Search === */}
           <SearchBar />
         </>
       )}

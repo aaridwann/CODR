@@ -5,19 +5,9 @@ import ListItems from "./ListItems";
 const ListComponent = () => {
   return (
     <View style={styles.container}>
-      <ScrollView style={{ width: "111%" }}>
+      
         <ListItems />
-        <ListItems />
-        <ListItems />
-        <ListItems />
-        <ListItems />
-        <ListItems />
-        <ListItems />
-        <ListItems />
-        <ListItems />
-        <ListItems />
-        <ListItems />
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   );
 };

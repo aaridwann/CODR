@@ -24,8 +24,8 @@ export default React.memo(CardMain);
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    // height: "50%",
-    flex: 1,
+    height: "50%",
+    // flex: 1,
     backgroundColor: "rgb(0,89,152)",
     padding: 20,
     borderBottomEndRadius: 800,

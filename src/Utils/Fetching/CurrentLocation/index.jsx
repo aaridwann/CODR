@@ -13,7 +13,6 @@ function useCurrentLocation() {
     try {
       const res = await axios.get(url);
       setData({ ...data, data: res.data, loading: false });
-      console.log(res.data);
     } catch (error) {
       setData({ ...data, data: null, loading: false });
       console.log(error);
@@ -22,7 +21,7 @@ function useCurrentLocation() {
 
   useEffect(() => {
     Fetching();
-  }, []);
+  }, [coords]);
 
   return { data: data };
 }
