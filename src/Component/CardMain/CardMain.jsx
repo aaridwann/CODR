@@ -1,25 +1,31 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import ColA from "./ColA";
 import ColB from "./ColB";
 
-const CardMain = () => {
+const CardMain = ({ data }) => {
   return (
     <View style={styles.container}>
       <View style={styles.col}>
-        <ColA />
-        <ColB />
+        <ColA wind={data?.wind?.speed} humidity={data?.main?.humidity} />
+        <ColB
+          weather={data?.weather[0]?.description}
+          city={data?.name}
+          suhu={data?.main?.temp}
+          icon={data?.weather[0]?.icon}
+        />
       </View>
     </View>
   );
 };
 
-export default CardMain;
+export default React.memo(CardMain);
 
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: "50%",
+    // height: "50%",
+    flex: 1,
     backgroundColor: "rgb(0,89,152)",
     padding: 20,
     borderBottomEndRadius: 800,

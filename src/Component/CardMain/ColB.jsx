@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const ColB = () => {
+const ColB = ({ icon, city, weather, suhu }) => {
   return (
     <View style={styles.col}>
       <Image
@@ -12,35 +12,38 @@ const ColB = () => {
           marginLeft: -50,
           marginBottom: -70,
         }}
-        source={{ uri: "http://openweathermap.org/img/wn/10d@4x.png" }}
+        source={{ uri: `http://openweathermap.org/img/wn/${icon}@4x.png` }}
       />
-      <Text style={styles.city}>Serang city</Text>
-      <View style={{flexDirection:'row'}}><Text style={styles.suhu}>90&deg;</Text><Text style={{ color:'white',fontSize:20, top:10,}}>C</Text></View>
-      <Text style={styles.cuaca}>Cloudy</Text>
+      <Text style={styles.city}>{city}</Text>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={styles.suhu}>{suhu}&deg;</Text>
+        <Text style={{ color: "white", fontSize: 20, top: 10 }}>C</Text>
+      </View>
+      <Text style={styles.cuaca}>{weather}</Text>
     </View>
   );
 };
 
-export default ColB;
+export default React.memo(ColB);
 
 const styles = StyleSheet.create({
   col: {
-    paddingLeft:8,
+    paddingLeft: 8,
     justifyContent: "flex-start",
   },
-  city:{
-    fontSize:20,
-    color:'white',
-    fontWeight:'bold'
+  city: {
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold",
   },
-  cuaca:{
-    fontSize:13,
-    color:'white',
-    fontWeight:'bold'
+  cuaca: {
+    fontSize: 13,
+    color: "white",
+    fontWeight: "bold",
   },
-  suhu:{
-    color:'white',
-    fontWeight:'bold',
-    fontSize:50
-  }
+  suhu: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 50,
+  },
 });

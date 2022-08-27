@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
   container: {
     width: windowWidth,
     height: windowHeight,
-    // backgroundColor:'#011a33'
+    flex:1,
+    backgroundColor:'#011a33'
   },
   background: {
     position: "absolute",
