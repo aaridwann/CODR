@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -7,12 +7,13 @@ import Settings from "../Screen/Profile";
 import DetailScreen from "../Screen/Details";
 import { useSelector } from "react-redux";
 import ErrorScreen from "../Screen/Error";
+import { LocationContext } from "../Context/LocationContext";
 
 const Tab = createBottomTabNavigator();
 
 function Route() {
   const { coords } = useSelector((state) => state.position);
-
+  const { position } = useContext(LocationContext);
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -35,11 +36,11 @@ function Route() {
           tabBarInactiveTintColor: "gray",
         })}
       >
-        {!coords ? (
+        {!position.coords ? (
           <>
             <Tab.Screen
               options={{ headerShown: false }}
-              name="Home"
+              name="Error"
               component={ErrorScreen}
             />
             <Tab.Screen name="Settings" component={Settings} />
