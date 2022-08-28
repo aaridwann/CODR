@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const positionSlice = createSlice({
     name: 'position',
     initialState: {
-        coords: {},
+        coords: false,
         mocked: {},
         message: ''
     },

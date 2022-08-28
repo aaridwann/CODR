@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { Suspense } from "react";
+import React, { Suspense, useContext } from "react";
 // import CardMain from "../../Component/CardMain/CardMain";
 import SaveScreen from "../../Utils/SafeArea";
 // import ListComponent from "../../Component/List";
@@ -8,12 +8,15 @@ import { useSelector } from "react-redux";
 import useCurrentLocation from "../../Utils/Fetching/CurrentLocation";
 import useDailyWeather from "../../Utils/Fetching/Daily";
 import LoadingScreen from "../Loading/Loading";
+import { LocationContext } from "../../Context/LocationContext";
 const CardMain = React.lazy(() => import("../../Component/CardMain/CardMain"));
 const ListComponent = React.lazy(() => import("../../Component/List/index"));
 const SearchBar = React.lazy(() => import("../../Component/SearchBar/index"));
 
 const HomeScreen = ({ navigation }) => {
-  const { coords } = useSelector((state) => state.position);
+  // const { coords } = useSelector((state) => state.position);
+  const { position } = useContext(LocationContext);
+  const { coords } = position;
   const { data } = useCurrentLocation(coords?.latitude, coords?.longitude);
   const { dailyData } = useDailyWeather(
     data?.data?.coord?.lat,

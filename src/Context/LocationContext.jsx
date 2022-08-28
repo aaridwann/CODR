@@ -1,29 +1,24 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  PermissionsAndroid,
-} from "react-native";
-import React, { useContext } from "react";
-import { useDispatch } from "react-redux";
-import { update } from "../../Redux/feature/Position";
+import { createContext, useEffect, useState } from "react";
+import { PermissionsAndroid } from "react-native";
 import Geolocation from "react-native-geolocation-service";
-import { LocationContext } from "../../Context/LocationContext";
 
-const Settings = () => {
-  const dispatch = useDispatch();
-  const { setPosition } = useContext(LocationContext);
+export const LocationContext = createContext();
 
-  async function location() {
+function LocationProviderContext({ children }) {
+  const [position, setPosition] = useState({
+    coords: false,
+    mocked: false,
+    message: "",
+  });
+  const requestLocationPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
           title: "Get Location Permission",
           message: "Weather Apps needs access to your locations",
-          // buttonNeutral: "Ask Me Later",
-          // buttonNegative: "Cancel",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
           buttonPositive: "OK",
         }
       );
@@ -59,18 +54,18 @@ const Settings = () => {
         });
       }
     } catch (err) {
-      return setPosition({ coords: false, mocked: false, message: err });
+      return returnsetPosition({ coords: false, mocked: {}, message: err });
     }
-  }
+  };
+
+  useEffect(() => {
+    requestLocationPermission();
+  }, []);
   return (
-    <View>
-      <Pressable onPress={location}>
-        <Text>Matikan Lokasi</Text>
-      </Pressable>
-    </View>
+    <LocationContext.Provider value={{ position, setPosition }}>
+      {children}
+    </LocationContext.Provider>
   );
-};
+}
 
-export default Settings;
-
-const styles = StyleSheet.create({});
+export default LocationProviderContext;

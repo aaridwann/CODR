@@ -26,14 +26,10 @@ const LocationProvider = ({ children }) => {
         }
       );
 
-      if (
-        granted ===
-        PermissionsAndroid.RESULTS.GRANTED
-      ) {
-        console.log("Sekarang bisa akses lokasi");
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(
           (position) => {
-            dispatch(
+          return  dispatch(
               update({
                 coords: position.coords,
                 mocked: position.mocked,
@@ -41,16 +37,27 @@ const LocationProvider = ({ children }) => {
               })
             );
           },
-          (err) => console.log(err),
+          (err) => {
+            console.log('ini error 1',err)
+            return dispatch(
+              update({
+                coords: false,
+                mocked: false,
+                message: err,
+              })
+            );
+            console.log(err);
+          },
           {
-            // showLocationDialog: true,
+            showLocationDialog: true,
             enableHighAccuracy: true,
             timeout: 30000,
             maximumAge: 30000,
           }
         );
       } else {
-        dispatch(
+        console.log('ini error 2')
+        return dispatch(
           update({
             coords: false,
             mocked: {},
@@ -60,23 +67,70 @@ const LocationProvider = ({ children }) => {
         console.log("Tidak di izinkan mengakses lokasi");
       }
     } catch (err) {
-      dispatch(update({ coords: false, mocked: {}, message: err }));
+      console.log('ini error 3',err)
+      return dispatch(update({ coords: false, mocked: {}, message: err }));
       console.log(err);
     }
   };
+
+
   useEffect(() => {
-    requestLocationPermission();
+    const granted = PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: "Get Location Permission",
+        message: "Weather Apps needs access to your locations",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK",
+      }
+    );
+
+    if (granted == 'granted'
+      // PermissionsAndroid.RESULTS.GRANTED
+      ) {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          dispatch(
+            update({
+              coords: position.coords,
+              mocked: position.mocked,
+              message: "success",
+            })
+          );
+        },
+        (err) => {
+          console.log('ini error 1',err)
+          return dispatch(
+            update({
+              coords: false,
+              mocked: false,
+              message: JSON.stringify(err),
+            })
+          );
+        },
+        {
+          showLocationDialog: true,
+          enableHighAccuracy: true,
+          // timeout: 30000,
+          maximumAge: 30000,
+        }
+      );
+    } else {
+      console.log('ini error 2')
+       dispatch(
+        update({
+          coords: false,
+          mocked: {},
+          message: "Tidak di izinkan mengakses lokasi",
+        })
+      );
+    }
   }, []);
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar
-        animated={true}
-        // backgroundColor="#61dafb"
-        // barStyle={statusBarStyle}
-        // showHideTransition={statusBarTransition}
-        hidden={true}
-      />
+      <StatusBar animated={true} hidden={true}/>
       {children}
     </View>
   );
