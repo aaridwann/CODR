@@ -1,40 +1,67 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import CardMain from "../../Component/CardMain/CardMain";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { Suspense } from "react";
+// import CardMain from "../../Component/CardMain/CardMain";
 import SaveScreen from "../../Utils/SafeArea";
-import ListComponent from "../../Component/List";
-import SearchBar from "../../Component/SearchBar";
+// import ListComponent from "../../Component/List";
+// import SearchBar from "../../Component/SearchBar";
 import { useSelector } from "react-redux";
 import useCurrentLocation from "../../Utils/Fetching/CurrentLocation";
 import useDailyWeather from "../../Utils/Fetching/Daily";
+import LoadingScreen from "../Loading/Loading";
+const CardMain = React.lazy(() => import("../../Component/CardMain/CardMain"));
+const ListComponent = React.lazy(() => import("../../Component/List/index"));
+const SearchBar = React.lazy(() => import("../../Component/SearchBar/index"));
 
-const HomeScreen = () => {
-  const { data } = useCurrentLocation();
-  const { dailyData } = useDailyWeather();
+const HomeScreen = ({ navigation }) => {
+  const { coords } = useSelector((state) => state.position);
+  const { data } = useCurrentLocation(coords?.latitude, coords?.longitude);
+  const { dailyData } = useDailyWeather(
+    data?.data?.coord?.lat,
+    data?.data?.coord?.lon
+  );
   const { loading } = data;
-  const loadDaily = dailyData?.loading
-  const dataDaily = dailyData?.data?.list
+
   return (
     <SaveScreen style={styles.container}>
       {loading ? (
-        <Text>Loading...</Text>
+        <LoadingScreen />
       ) : (
-        <>
-          <CardMain data={data?.data} />
+        <View style={{ flex: 1 }}>
+          <View style={{ height: "50%" }}>
+            <Suspense fallback={<LoadingScreen />}>
+              <CardMain data={data?.data} />
+            </Suspense>
+          </View>
 
           {/* === List ==== */}
-          <ScrollView style={{ width: "111%" }}>
-            { dailyData?.loading ? <Text>Loading...</Text> : 
-              dailyData?.data?.list?.map((data,i) => (
-              <View key={i}>
-                <ListComponent  />
-              </View>
-            ))}
-          </ScrollView>
+          <View style={{ height: "46%", width: "111%" }}>
+            <ScrollView>
+              {dailyData?.loading ? (
+                <Text>Loading...</Text>
+              ) : (
+                dailyData?.data?.map((x, i) => (
+                  <Pressable
+                    onPress={() =>
+                      navigation.navigate("Detail", {
+                        detail: { data, list: x },
+                      })
+                    }
+                    key={i}
+                  >
+                    <Suspense fallback={<LoadingScreen />}>
+                      <ListComponent data={x} />
+                    </Suspense>
+                  </Pressable>
+                ))
+              )}
+            </ScrollView>
+          </View>
 
           {/* === Search === */}
-          <SearchBar />
-        </>
+          <Suspense fallback={<LoadingScreen />}>
+            <SearchBar navigation={navigation} />
+          </Suspense>
+        </View>
       )}
     </SaveScreen>
   );

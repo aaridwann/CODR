@@ -4,40 +4,48 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "../Screen/Home";
 import Settings from "../Screen/Profile";
-import store from "../Redux/Store/store";
-import { Provider } from "react-redux";
 import DetailScreen from "../Screen/Details";
-import LocationProvider from "../Utils/LocationProvider";
+import { useSelector } from "react-redux";
+import ErrorScreen from "../Screen/Error";
 
 const Tab = createBottomTabNavigator();
 
 function Route() {
+  const { coords } = useSelector((state) => state.position);
+
   return (
-    <Provider store={store}>
-      <LocationProvider>
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
 
-                if (route.name === "Home") {
-                  iconName = focused
-                    ? route.name.toLowerCase()
-                    : route.name.toLowerCase() + "-outline";
-                } else if (route.name === "Settings") {
-                  iconName = focused
-                    ? route.name.toLowerCase()
-                    : route.name.toLowerCase() + "-outline";
-                }
-
-                // You can return any component that you like here!
-                return <Ionicons name={iconName} size={size} color={color} />;
-              },
-              tabBarActiveTintColor: "tomato",
-              tabBarInactiveTintColor: "gray",
-            })}
-          >
+            if (route.name === "Home") {
+              iconName = focused
+                ? route.name.toLowerCase()
+                : route.name.toLowerCase() + "-outline";
+            } else if (route.name === "Settings") {
+              iconName = focused
+                ? route.name.toLowerCase()
+                : route.name.toLowerCase() + "-outline";
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray",
+        })}
+      >
+        {!coords ? (
+          <>
+            <Tab.Screen
+              options={{ headerShown: false }}
+              name="Home"
+              component={ErrorScreen}
+            />
+            <Tab.Screen name="Settings" component={Settings} />
+          </>
+        ) : (
+          <>
             <Tab.Screen
               options={{ headerShown: false }}
               name="Home"
@@ -45,16 +53,18 @@ function Route() {
             />
 
             <Tab.Screen
-              options={{ headerShown: false }}
+              options={{
+                headerShown: false,
+                tabBarVisible: false, //like this
+                tabBarButton: (props) => null,
+              }}
               name="Detail"
               component={DetailScreen}
             />
-
-            <Tab.Screen name="Settings" component={Settings} />
-          </Tab.Navigator>
-        </NavigationContainer>
-      </LocationProvider>
-    </Provider>
+          </>
+        )}
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 

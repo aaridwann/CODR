@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const ColA = ({ wind, humidity, cod }) => {
+const ColA = ({ wind, humidity, cloud }) => {
   return (
     <View style={styles.container}>
       <View style={styles.col}>
@@ -22,11 +22,11 @@ const ColA = ({ wind, humidity, cod }) => {
       </View>
       <View style={styles.col}>
         <Image
-          style={{ width: 50, height: 50 }}
-          source={{ uri: "http://openweathermap.org/img/wn/10d@2x.png" }}
+          style={{ width: 40, height: 40, resizeMode: "center" }}
+          source={require("../../../assets/cliud.png")}
         />
-        <Text style={styles.data}>9Km/h</Text>
-        <Text style={styles.desc}>Wind</Text>
+        <Text style={{ color: "white", fontWeight: "800" }}>{cloud}%</Text>
+        <Text style={{ color: "white", fontWeight: "400" }}>Cloudness</Text>
       </View>
     </View>
   );
