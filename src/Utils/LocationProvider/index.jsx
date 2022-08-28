@@ -1,5 +1,12 @@
-import { StyleSheet, Text, View, PermissionsAndroid } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  PermissionsAndroid,
+  SafeAreaView,
+  StatusBar,
+} from "react-native";
+import React, { useEffect } from "react";
 import Geolocation from "react-native-geolocation-service";
 import { update } from "../../Redux/feature/Position";
 import { useDispatch } from "react-redux";
@@ -12,28 +19,40 @@ const LocationProvider = ({ children }) => {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
           title: "Get Location Permission",
-          message: "Cool Apps needs access to your locations",
+          message: "Weather Apps needs access to your locations",
           buttonNeutral: "Ask Me Later",
           buttonNegative: "Cancel",
           buttonPositive: "OK",
         }
       );
 
-      if (granted === "granted") {
+      if (
+        granted ===
+        PermissionsAndroid.RESULTS.GRANTED
+      ) {
         console.log("Sekarang bisa akses lokasi");
         Geolocation.getCurrentPosition(
           (position) => {
             dispatch(
-              update({ coords: position.coords, mocked: position.mocked })
+              update({
+                coords: position.coords,
+                mocked: position.mocked,
+                message: "success",
+              })
             );
           },
           (err) => console.log(err),
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+          {
+            // showLocationDialog: true,
+            enableHighAccuracy: true,
+            timeout: 30000,
+            maximumAge: 30000,
+          }
         );
       } else {
         dispatch(
           update({
-            coords: {},
+            coords: false,
             mocked: {},
             message: "Tidak di izinkan mengakses lokasi",
           })
@@ -41,7 +60,7 @@ const LocationProvider = ({ children }) => {
         console.log("Tidak di izinkan mengakses lokasi");
       }
     } catch (err) {
-      dispatch(update({ coords: {}, mocked: {}, message: err }));
+      dispatch(update({ coords: false, mocked: {}, message: err }));
       console.log(err);
     }
   };
@@ -49,7 +68,18 @@ const LocationProvider = ({ children }) => {
     requestLocationPermission();
   }, []);
 
-  return <View style={{flex:1}}>{children}</View>;
+  return (
+    <View style={{ flex: 1 }}>
+      <StatusBar
+        animated={true}
+        // backgroundColor="#61dafb"
+        // barStyle={statusBarStyle}
+        // showHideTransition={statusBarTransition}
+        hidden={true}
+      />
+      {children}
+    </View>
+  );
 };
 
 export default LocationProvider;

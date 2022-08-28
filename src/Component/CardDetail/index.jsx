@@ -1,34 +1,55 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import wind from '../../../assets/wind.png'
 
-const CardDetail = () => {
+const CardDetail = ({
+  city,
+  icon,
+  suhu,
+  cuaca,
+  wind,
+  humidity,
+  cloud,
+  date,
+}) => {
   return (
     // <View style={styles.con2}>
     <View style={styles.con}>
       {/*=== 1 === */}
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Ionicons name="globe" size={40} color={"white"} />
-        <Text style={{color:'white',marginLeft:10, fontWeight:'bold'}}>Serang</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Image
+          style={{
+            width: 30,
+            height: 30,
+            resizeMode: "center",
+          }}
+          source={require("../../../assets/path.png")}
+        />
+        <Text style={{ color: "white", fontWeight: "bold" }}>{city}</Text>
       </View>
 
       {/* === ICON === */}
       <Image
         style={{
-          width: "70%",
-          height: "70%",
-          marginTop: -100,
-          marginBottom: -140,
+          width: "60%",
+          height: "60%",
+          marginTop: -60,
+          marginBottom: -80,
+          resizeMode: "cover",
         }}
-        source={{ uri: "http://openweathermap.org/img/wn/10d@4x.png" }}
+        source={{ uri: `http://openweathermap.org/img/wn/${icon}@4x.png` }}
       />
       {/* === SUHU === */}
-      <Text style={styles.suhu}>90&deg;</Text>
+      <Text style={styles.suhu}>{suhu.toString().slice(0, 2)}&deg;</Text>
       {/* === Cuaca === */}
-      <Text style={styles.cuaca}>Cloudy</Text>
+      <Text style={styles.cuaca}>{cuaca}</Text>
       {/* === Date === */}
-      <Text style={styles.date}>Senin,20 Oktober 2022</Text>
+      <Text style={styles.date}>{date}</Text>
 
       {/* === Bottom === */}
       <View
@@ -40,62 +61,78 @@ const CardDetail = () => {
           justifyContent: "space-around",
           marginTop: 10,
           padding: 5,
-          paddingTop:10
+          paddingTop: 10,
         }}
       >
-        <View style={{ justifyContent: "flex-start", alignItems: "center", width:80}}>
+        {/* === wind === */}
+        <View
+          style={{
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: 80,
+          }}
+        >
           <Image
             style={{
-              width: '60%',
-              height: '23%',
-              marginBottom:10,
+              width: "60%",
+              height: "23%",
+              marginBottom: 10,
+              resizeMode: "center",
             }}
-            source={
-                require('../../../assets/wind.png')
-            }
+            source={require("../../../assets/wind.png")}
           />
-          <Text style={{color:'white', fontWeight:'800'}}>13 Km/h</Text>
-          <Text style={{color:'white', fontWeight:'400'}}>Wind</Text>
+          <Text style={{ color: "white", fontWeight: "800" }}>{wind} Km/h</Text>
+          <Text style={{ color: "white", fontWeight: "400" }}>Wind</Text>
         </View>
-
-        <View style={{ justifyContent: "flex-start", alignItems: "center", width:80}}>
+        {/* === Humidity === */}
+        <View
+          style={{
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: 80,
+          }}
+        >
           <Image
             style={{
-              width: '60%',
-              height: '23%',
-              marginBottom:10,
+              width: "60%",
+              height: "23%",
+              marginBottom: 10,
+              resizeMode: "center",
             }}
-            source={
-                require('../../../assets/wind.png')
-            }
+            source={require("../../../assets/humidity.png")}
           />
-          <Text style={{color:'white', fontWeight:'800'}}>13 Km/h</Text>
-          <Text style={{color:'white', fontWeight:'400'}}>Wind</Text>
+          <Text style={{ color: "white", fontWeight: "800" }}>
+            {humidity} %
+          </Text>
+          <Text style={{ color: "white", fontWeight: "400" }}>Humidity</Text>
         </View>
-
-        <View style={{ justifyContent: "flex-start", alignItems: "center", width:80}}>
+        {/* === Cloud ==== */}
+        <View
+          style={{
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: 80,
+          }}
+        >
           <Image
             style={{
-              width: '60%',
-              height: '23%',
-              marginBottom:10,
+              width: "60%",
+              height: "23%",
+              marginBottom: 10,
+              resizeMode: "center",
             }}
-            source={
-                require('../../../assets/wind.png')
-            }
+            source={require("../../../assets/cliud.png")}
           />
-          <Text style={{color:'white', fontWeight:'800'}}>13 Km/h</Text>
-          <Text style={{color:'white', fontWeight:'400'}}>Wind</Text>
+          <Text style={{ color: "white", fontWeight: "800" }}>{cloud}%</Text>
+          <Text style={{ color: "white", fontWeight: "400" }}>Cloudness</Text>
         </View>
-
-
       </View>
     </View>
     // </View>
   );
 };
 
-export default CardDetail;
+export default React.memo(CardDetail);
 
 const styles = StyleSheet.create({
   con2: {
@@ -116,10 +153,11 @@ const styles = StyleSheet.create({
   },
   con: {
     width: "100%",
-    height: "80%",
+    // height: "75%",
+    flex: 1,
     backgroundColor: "#5aabf2",
-    borderBottomRightRadius: 100,
-    borderBottomLeftRadius: 100,
+    borderBottomRightRadius: 90,
+    borderBottomLeftRadius: 90,
     paddingVertical: 10,
     justifyContent: "flex-start",
     alignItems: "center",
@@ -133,12 +171,12 @@ const styles = StyleSheet.create({
     elevation: 23,
   },
   suhu: {
-    fontSize: 140,
+    fontSize: 70,
     color: "white",
     fontWeight: "bold",
   },
   cuaca: {
-    marginTop: -30,
+    marginTop: -10,
     fontSize: 40,
     color: "white",
   },

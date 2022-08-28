@@ -7,11 +7,15 @@ const CardMain = ({ data }) => {
   return (
     <View style={styles.container}>
       <View style={styles.col}>
-        <ColA wind={data?.wind?.speed} humidity={data?.main?.humidity} />
+        <ColA
+          wind={data?.wind?.speed}
+          humidity={data?.main?.humidity}
+          cloud={data?.clouds?.all}
+        />
         <ColB
           weather={data?.weather[0]?.description}
           city={data?.name}
-          suhu={data?.main?.temp}
+          suhu={data?.main?.temp.toString().slice(0, 4)}
           icon={data?.weather[0]?.icon}
         />
       </View>
@@ -24,8 +28,7 @@ export default React.memo(CardMain);
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    // height: "50%",
-    flex: 1,
+    height: "100%",
     backgroundColor: "rgb(0,89,152)",
     padding: 20,
     borderBottomEndRadius: 800,

@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import moment from "moment";
 
 const ColB = ({ icon, city, weather, suhu }) => {
   return (
@@ -20,6 +21,10 @@ const ColB = ({ icon, city, weather, suhu }) => {
         <Text style={{ color: "white", fontSize: 20, top: 10 }}>C</Text>
       </View>
       <Text style={styles.cuaca}>{weather}</Text>
+      <Text style={styles.cuaca}>
+        {moment(Date.now()).format("DD MMM YY, HH:mm ")}
+      </Text>
+      {/* <Text style={styles.cuaca}>10:00</Text> */}
     </View>
   );
 };

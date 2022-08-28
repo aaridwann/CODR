@@ -12,6 +12,7 @@ export const positionSlice = createSlice({
         update: (state,action) => {
             state.coords = action.payload.coords,
             state.mocked = action.payload.mocked
+            state.message = action.payload.message
         },
         error: (state, action) => {
             state.message = action.payload.message
